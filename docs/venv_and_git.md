@@ -4,11 +4,20 @@ Documentation, Links and Helpful Hints on VENV.
 
 ---
 
-## Helpful Links
+## Venv Helpful Links
 
 1. https://docs.python.org/3/library/venv.html
 2. https://virtualenvwrapper.readthedocs.io/en/latest/
 3. https://www.freecodecamp.org/news/virtualenv-with-virtualenvwrapper-on-ubuntu-18-04/
+
+
+---
+
+
+## Git Helpful Links
+
+1. https://www.conventionalcommits.org/en/v1.0.0/
+2. https://semver.org/
 
 
 ---

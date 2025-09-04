@@ -88,11 +88,13 @@ python -m conf.module_a
 ---
 
 ## 4) As a last resort: tweak `sys.path`
+
 ```python
 # conf/module_a.py
 import sys, pathlib
+
 sys.path.append(str(pathlib.Path(__file__).resolve().parents[1]))
-from exceptions.errors import DataFetchError
+from dayche.exceptions import DataFetchError
 ```
 This works but is **brittle**. Prefer options 1–3.
 

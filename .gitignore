@@ -136,5 +136,8 @@ Desktop.ini
 *.swp
 *.swo
 
+# backup directories
+bup/
+
 
 

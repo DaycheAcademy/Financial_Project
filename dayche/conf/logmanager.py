@@ -108,7 +108,26 @@ class LogManager(object):
         return _log_path, _run_id
 
 
-    
+    def logger_cleanup(self, keep_days: int = 14, recursive: bool = False) -> int:
+        base = Path(self.base_dir)
+        if not base.exists():
+            return 0
+
+        cut_off_ts = (datetime.now(timezone.utc) - timedelta(days=keep_days)).timestamp()
+        lf = base.rglob("*.log") if recursive else base.glob("*.log")
+
+        file_removed = 0
+        for f in lf:
+            try:
+                if f.is_file() and f.stat().st_mtime < cut_off_ts:
+                    f.unlink(missing_ok=True)
+                    file_removed += 1
+            except PermissionError:
+                pass
+            except FileNotFoundError:
+                pass
+
+        return file_removed
 
 
 

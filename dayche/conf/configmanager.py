@@ -29,6 +29,7 @@ class ConfigManager(object):
         return self.config['database']['server']
 
 
+
 if __name__ == '__main__':
     for elem in sys.path:
         print(elem)

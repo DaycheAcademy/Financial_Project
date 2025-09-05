@@ -1,0 +1,174 @@
+{
+  "roadmap": [
+    {
+      "title": "Environment Setup",
+      "description": "Initialize dev environment",
+      "details": [
+        "Create virtual environment",
+        "Install needed packages",
+        "Verify Python version",
+        "Set config files"
+      ]
+    },
+    {
+      "title": "Project Structure",
+      "description": "Manage code directories",
+      "details": [
+        "Create src folder",
+        "Add data folder",
+        "Separate docs files",
+        "Place config file"
+      ]
+    },
+    {
+      "title": "Dependency Installation",
+      "description": "Set required libraries",
+      "details": [
+        "List in requirements",
+        "Pin library versions",
+        "Ensure matching environment",
+        "Use pip install"
+      ]
+    },
+    {
+      "title": "Config Management",
+      "description": "Handle config files",
+      "details": [
+        "Load with configobj",
+        "Validate file existence",
+        "Retrieve database options",
+        "Retrieve logging settings"
+      ]
+    },
+    {
+      "title": "Data Retrieval",
+      "description": "Collect data sets",
+      "details": [
+        "Fetch from API",
+        "Parse JSON response",
+        "Convert to DataFrame",
+        "Handle missing fields"
+      ]
+    },
+    {
+      "title": "Data Cleaning",
+      "description": "Ensure data integrity",
+      "details": [
+        "Drop invalid rows",
+        "Fill missing columns",
+        "Convert data types",
+        "Remove duplicates carefully"
+      ]
+    },
+    {
+      "title": "Data Transformation",
+      "description": "Prepare final format",
+      "details": [
+        "Aggregate relevant columns",
+        "Reindex time series",
+        "Rename fields consistently",
+        "Create derived metrics"
+      ]
+    },
+    {
+      "title": "Database Design",
+      "description": "Build SQL schema",
+      "details": [
+        "Define Finance schema",
+        "Use unique identifiers",
+        "Add foreign keys",
+        "Ensure indexing strategy"
+      ]
+    },
+    {
+      "title": "Database Insertion",
+      "description": "Populate required tables",
+      "details": [
+        "Insert symbols data",
+        "Insert historical prices",
+        "Insert technical indicators",
+        "Validate insertion success"
+      ]
+    },
+    {
+      "title": "Indicator Calculations",
+      "description": "Compute stock metrics",
+      "details": [
+        "Calculate moving average",
+        "Compute exponential average",
+        "Store results DB",
+        "Add multiple indicators"
+      ]
+    },
+    {
+      "title": "Realtime Updates",
+      "description": "Insert fresh data",
+      "details": [
+        "Fetch streaming quotes",
+        "Append DB records",
+        "Recalculate indicators automatically",
+        "Schedule recurring tasks"
+      ]
+    },
+    {
+      "title": "Error Handling",
+      "description": "Implement custom exceptions",
+      "details": [
+        "Create abstract errors",
+        "Derive specialized errors",
+        "Raise on connection failure",
+        "Log error details"
+      ]
+    },
+    {
+      "title": "Logging",
+      "description": "Track system events",
+      "details": [
+        "Initialize logging config",
+        "Use config file",
+        "Write logs consistently",
+        "Rotate large logs"
+      ]
+    },
+    {
+      "title": "Plotting",
+      "description": "Visualize data trends",
+      "details": [
+        "Use matplotlib library",
+        "Plot price lines",
+        "Overlay indicators curves",
+        "Handle date formats"
+      ]
+    },
+    {
+      "title": "Code Packaging",
+      "description": "Organize final modules",
+      "details": [
+        "Separate logic layers",
+        "Use consistent naming",
+        "Create main entrypoint",
+        "Ensure code readability"
+      ]
+    },
+    {
+      "title": "Version Control",
+      "description": "Git repository integration",
+      "details": [
+        "Initialize local repo",
+        "Commit incremental changes",
+        "Push remote branches",
+        "Review pull requests"
+      ]
+    },
+    {
+      "title": "Documentation",
+      "description": "Prepare user guides",
+      "details": [
+        "Add usage instructions",
+        "Write README file",
+        "Explain config steps",
+        "Detail code architecture"
+      ]
+    }
+  ]
+}

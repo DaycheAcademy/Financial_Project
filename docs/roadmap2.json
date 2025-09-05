@@ -1,0 +1,268 @@
+{
+  "roadmap": [
+    {
+      "title": "Environment Setup",
+      "description": "Prepare and configure the development environment, ensuring all required tools and frameworks are installed.",
+      "details": [
+        {
+          "task": "Install Python",
+          "notes": "Use Python 3.8+; verify with 'python --version'"
+        },
+        {
+          "task": "Create Virtual Env",
+          "notes": "Use 'venv' or 'conda' to isolate dependencies"
+        },
+        {
+          "task": "Install Essential Packages",
+          "notes": "Include configobj, requests, pyodbc, pandas, matplotlib, etc."
+        },
+        {
+          "task": "Set Up Folder Structure",
+          "notes": "Create src, data, docs, outputs, and logs directories"
+        }
+      ]
+    },
+    {
+      "title": "Project Structure",
+      "description": "Organize modules and files into clear, logical directories.",
+      "details": [
+        {
+          "task": "src Directory",
+          "notes": "Houses Python code (modules, classes, main entry)"
+        },
+        {
+          "task": "data Directory",
+          "notes": "Stores CSVs, downloaded data, or temp files"
+        },
+        {
+          "task": "docs Directory",
+          "notes": "Keeps markdown guides, instructions, and references"
+        },
+        {
+          "task": "outputs Directory",
+          "notes": "Saves generated charts or reports"
+        }
+      ]
+    },
+    {
+      "title": "Dependency Management",
+      "description": "Ensure all required libraries and versions are tracked for reproducibility.",
+      "details": [
+        {
+          "task": "Create requirements.txt",
+          "notes": "List pinned versions for each dependency"
+        },
+        {
+          "task": "Install via pip",
+          "notes": "pip install -r requirements.txt"
+        },
+        {
+          "task": "Verify Imports",
+          "notes": "Confirm no missing or outdated libraries"
+        },
+        {
+          "task": "Update Regularly",
+          "notes": "Keep dependencies in sync across environments"
+        }
+      ]
+    },
+    {
+      "title": "Configuration Handling",
+      "description": "Load database and logging settings from a dedicated config file using configobj.",
+      "details": [
+        {
+          "task": "Prepare config.cfg",
+          "notes": "Include [database], [logging] sections with keys"
+        },
+        {
+          "task": "Write ConfigManager",
+          "notes": "Parse config.cfg and provide property accessors"
+        },
+        {
+          "task": "Validate Existence",
+          "notes": "Raise error if config file is missing"
+        },
+        {
+          "task": "Use in Modules",
+          "notes": "Retrieve server, user, password, log paths, etc."
+        }
+      ]
+    },
+    {
+      "title": "Database Design",
+      "description": "Construct a SQL schema in Microsoft SQL Server for storing financial data and technical indicators.",
+      "details": [
+        {
+          "task": "Create Database",
+          "notes": "Example: CREATE DATABASE FinancialData;"
+        },
+        {
+          "task": "Define Schema",
+          "notes": "Use Finance schema to group tables logically"
+        },
+        {
+          "task": "Use GUID IDs",
+          "notes": "Apply UNIQUEIDENTIFIER with NEWID() for random IDs"
+        },
+        {
+          "task": "Setup Relationships",
+          "notes": "Add foreign keys between Symbols and HistoricalPrices"
+        }
+      ]
+    },
+    {
+      "title": "Data Retrieval and Processing",
+      "description": "Obtain historical data from public APIs and clean/prepare before inserting into the database.",
+      "details": [
+        {
+          "task": "DataFetcher Abstraction",
+          "notes": "Create ABC for fetch_historical_data, fetch_realtime_data"
+        },
+        {
+          "task": "Implement Fetcher",
+          "notes": "FinancialModelingPrepFetcher for JSON parsing"
+        },
+        {
+          "task": "Clean Data",
+          "notes": "Rename columns, handle missing values, convert types"
+        },
+        {
+          "task": "Convert to DataFrame",
+          "notes": "Use pandas for consistent data representation"
+        }
+      ]
+    },
+    {
+      "title": "Indicator Calculations",
+      "description": "Derive technical indicators such as SMA, EMA, or others for each dataset.",
+      "details": [
+        {
+          "task": "Indicator ABC",
+          "notes": "Base class with calculate() method"
+        },
+        {
+          "task": "Implement SMA/EMA",
+          "notes": "Compute moving averages using rolling and ewm"
+        },
+        {
+          "task": "Insert Results",
+          "notes": "Store computed indicators into TechnicalIndicators table"
+        },
+        {
+          "task": "Extend Indicators",
+          "notes": "Add more advanced metrics if needed"
+        }
+      ]
+    },
+    {
+      "title": "Real-time Data Updates",
+      "description": "Fetch and insert live data, then recalculate indicators on the fly.",
+      "details": [
+        {
+          "task": "Use Realtime API",
+          "notes": "fetch_realtime_data from the same or different API"
+        },
+        {
+          "task": "Updater Class",
+          "notes": "Insert new records into HistoricalPrices"
+        },
+        {
+          "task": "Recompute Indicators",
+          "notes": "Apply SMA/EMA logic to latest data"
+        },
+        {
+          "task": "Schedule Process",
+          "notes": "Use Cron or APScheduler for repeated execution"
+        }
+      ]
+    },
+    {
+      "title": "Error Handling and Logging",
+      "description": "Capture exceptions with custom classes and record events in logs for debugging.",
+      "details": [
+        {
+          "task": "Abstract Base Error",
+          "notes": "ProjectBaseError as common parent"
+        },
+        {
+          "task": "Specific Errors",
+          "notes": "DatabaseConnectionError, DataFetchError, etc."
+        },
+        {
+          "task": "Initialize Logging",
+          "notes": "Read log level, file path from config; use logging.basicConfig"
+        },
+        {
+          "task": "Raise and Catch",
+          "notes": "Gracefully handle issues in connect, fetch, or update"
+        }
+      ]
+    },
+    {
+      "title": "Plotting and Visualization",
+      "description": "Render price movements with technical indicators for better insights.",
+      "details": [
+        {
+          "task": "Use matplotlib",
+          "notes": "Plot DataFrame columns for price trends"
+        },
+        {
+          "task": "Overlay Indicators",
+          "notes": "Plot SMA, EMA lines on the same chart"
+        },
+        {
+          "task": "Customize Labels",
+          "notes": "Add legend, axis labels, and a proper title"
+        },
+        {
+          "task": "Save or Display",
+          "notes": "Export figure to outputs or show interactively"
+        }
+      ]
+    },
+    {
+      "title": "Final Integration",
+      "description": "Combine all modules into a coherent workflow, ensuring correct data flow from fetch to visualization.",
+      "details": [
+        {
+          "task": "Assemble main.py",
+          "notes": "Coordinate config, DB, fetch, and indicators"
+        },
+        {
+          "task": "Order of Calls",
+          "notes": "Fetch data, clean, store, compute indicators, plot results"
+        },
+        {
+          "task": "Validate End-to-End",
+          "notes": "Check each step for correctness and data accuracy"
+        },
+        {
+          "task": "Optimize Performance",
+          "notes": "Consider bulk inserts, indexing, or caching if needed"
+        }
+      ]
+    },
+    {
+      "title": "Documentation and Version Control",
+      "description": "Maintain clear documentation, commit changes regularly, and keep code well-tracked.",
+      "details": [
+        {
+          "task": "README.md",
+          "notes": "Explain installation, usage, structure, config steps"
+        },
+        {
+          "task": "Git Repository",
+          "notes": "Initialize local repo, push to remote, track changes"
+        },
+        {
+          "task": "Commit Often",
+          "notes": "Small commits with descriptive messages"
+        },
+        {
+          "task": "Use Branches",
+          "notes": "Separate features or bug fixes for clearer merges"
+        }
+      ]
+    }
+  ]
+}

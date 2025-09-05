@@ -20,12 +20,6 @@ from dayche.exceptions import ConfigFileNotFound
 
 class ConfigManager(object):
 
-    LOG_LEVEL = {'DEBUG': logging.DEBUG,
-                 'INFO': logging.INFO,
-                 'WARNING': logging.WARNING,
-                 'ERROR': logging.ERROR,
-                 'CRITICAL': logging.CRITICAL}
-
     def __init__(self, path: str = 'config.cfg'):
         cfg_path = Path(path)
         if not cfg_path.exists():

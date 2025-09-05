@@ -72,7 +72,6 @@ class ConfigManager(object):
 
 
 
-
 if __name__ == '__main__':
     for elem in sys.path:
         print(elem)

@@ -38,3 +38,6 @@ class QueryExecutionError(BaseCryptoException):
 
 class TransactionError(BaseCryptoException):
     pass
+
+class APIURLNotFound(BaseCryptoException):
+    pass

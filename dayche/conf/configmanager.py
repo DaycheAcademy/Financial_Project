@@ -51,7 +51,7 @@ class ConfigManager(object):
 
     @property
     def api_url(self):
-        return self.config['api']['api_url']
+        return self.config['api']['base_url']
 
     @property
     def log_dir(self):

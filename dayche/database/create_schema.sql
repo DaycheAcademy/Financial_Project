@@ -103,11 +103,11 @@ GO
 
 
 IF NOT EXISTS(
-        SELECT 1 FROM sys.indexes WHERE name='IX_IntraDayPrices_Symbol_Interval'
+        SELECT 1 FROM sys.indexes WHERE name='IX_IntraDayPrices_Symbol_Interval_IngestedTime'
         AND object_id=OBJECT_ID('Finance.IntraDayPrices')
 )
-CREATE UNIQUE INDEX IX_IntraDayPrices_Symbol_Interval
-        ON Finance.IntraDayPrices(IntervalSecond,SymbolID);
+CREATE UNIQUE INDEX IX_IntraDayPrices_Symbol_Interval_IngestedTime
+        ON Finance.IntraDayPrices(IntervalSecond,SymbolID,IngestedTime);
 GO
 
 
@@ -116,7 +116,7 @@ IF NOT EXISTS(
         SELECT 1 FROM sys.indexes WHERE name='IX_IntraDayPrices_Symbol_Ingested'
         AND object_id=OBJECT_ID('Finance.IntraDayPrices')
 )
-CREATE UNIQUE INDEX IX_IntraDayPrices_Symbol_Ingested
+CREATE INDEX IX_IntraDayPrices_Symbol_Ingested
         ON Finance.IntraDayPrices(IngestedTime,SymbolID);
 GO
 

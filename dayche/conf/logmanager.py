@@ -1,8 +1,9 @@
-from .configmanager import ConfigManager
+from dayche.conf.configmanager import ConfigManager
 import logging
 import os
 from datetime import datetime, timedelta, timezone
 # from typing import Any
+from pathlib import Path
 
 
 class LogManager(object):
@@ -44,7 +45,7 @@ class LogManager(object):
         # applying precedences
         self.base_dir = base_dir or cfg_dir or 'logs'
         self.level = level if level else cfg_level if cfg_level else 'INFO'
-        self.file_pattern = file_pattern or cfg_pattern or self.DEFAULT_FILE_PATTERN
+        self.file_pattern = file_pattern or cfg_pattern or LogManager.DEFAULT_FILE_PATTERN
 
 
     def _resolve_level(self, level=None) -> int:
@@ -69,7 +70,7 @@ class LogManager(object):
         date_s = now.strftime("%Y%m%d")
         time_s = now.strftime("%H%M%S")
         run_id = f'{date_s}_{time_s}'
-        file_name = self.file_pattern.format(prefix=prefix,
+        file_name = self.file_pattern.format(prefix=self.prefix,
                                              run_id=run_id,
                                              pid=os.getpid())
         log_dir = Path(self.base_dir)

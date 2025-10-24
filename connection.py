@@ -10,12 +10,30 @@ from typing import Optional, Sequence, Any, Iterable
 import pyodbc
 import pymssql
 
+from dayche.conf.logmanager import LogManager
+import logging
+
+from dayche.exceptions.cryptoexceptions import DriverNotInstalled
+from dayche.exceptions.cryptoexceptions import DataBaseConnectionError
+from dayche.exceptions.cryptoexceptions import QueryExecutionError
+from dayche.exceptions.cryptoexceptions import TransactionError
 
 class BaseSQLServerClient(abc.ABC):
 
     def __init__(self) -> None:
+
+        try:
+            lm = LogManager(prefix='db', console=True)
+            self._log_path, self._run_id = lm.logger_setup()
+            self.files_removed = lm.logger_cleanup(keep_days=2)
+        except Exception as e:
+            logging.basicConfig(level=logging.INFO)
+            self._log_path, self._run_id = None, None
+
+        self.logger = logging.getLogger(self.__class__.__name__)
         self.cursor = None
         self.conn = None
+        self.logger.debug("Initialized BaseSQLServerClient | run_id={} | log_path={}".format(self._run_id, self._log_path))
 
     @abc.abstractmethod
     def connect_sql_auth(self, server: str, database: str, user: str, password: str, **kwargs) -> None:
@@ -117,50 +135,101 @@ class PyMSSQLClient(BaseSQLServerClient):
         try:
             import pymssql
         except ImportError as e:
-            raise RuntimeError("pymssql is not installed. pip install pymssql") from e
+            raise DriverNotInstalled("pymssql is not installed. pip install pymssql", cause=str(e))
         self._pymssql = pymssql
         self.autocommit = autocommit
+        self.logger.info("PyMSSQLClient Instance Created | autocommit={}".format(autocommit))
 
     def connect_sql_auth(self, server: str, database: str, user: str, password: str, **kwargs) -> None:
         # server -> ip or name (host)  |  host,port
 
-        self.conn = self._pymssql.connect(
-            server=server,
-            database=database,
-            user=user,
-            password=password,
-            timeout=kwargs.get('timeout', 10),
-            login_timeout=kwargs.get('login_timeout', 10),
-            as_dict=False
-        )
-        self.conn.autocommit(self.autocommit)
-        self.cursor = self.conn.cursor()
+        self.logger.debug("Connecting (using pymsssql) to server={} | database={} | user={} | password={}"
+                          .format(server, database, user, password))
+        try:
+            self.conn = self._pymssql.connect(
+                server=server,
+                database=database,
+                user=user,
+                password=password,
+                timeout=kwargs.get('timeout', 10),
+                login_timeout=kwargs.get('login_timeout', 10),
+                as_dict=False
+            )
+            self.conn.autocommit(self.autocommit)
+            self.cursor = self.conn.cursor()
+            self.logger.info("Connecting (using pymsssql) to server={} | database={} | user={} | password={}"
+                          .format(server, database, user, password))
+        except Exception as e:
+            self.logger.error("Connection (using pymsssql) to server failed: {}".format(str(e)))
+            raise DataBaseConnectionError("pymssql connection failed", cause=str(e))
 
     def connect_windows_auth(self, server: str, database: str, user: str, password: str, **kwargs) -> None:
-        raise NotImplementedError("Windows Authwith pymssql is not directly supported")
+        self.logger.warning("Windows Auth Requested, but pymssql does not support it")
+        raise QueryExecutionError("pymssql connection failed")
 
     def execute(self, sql: str, params: Optional[Sequence[Any]] = None):
-        self.cursor.execute(sql, params)
+        self.logger.debug("Executing (using pymssql) SQL Query: {} | params: {}".format(sql, params))
+        try:
+            self.cursor.execute(sql, params) if params is not None else self.cursor.execute(sql)
+            self.logger.info("Query (using pymssql) Executed Successfully: {} | params: {}".format(sql, params))
+        except Exception as e:
+            self.logger.error("Execution (using pymssql) of query failed")
+            raise QueryExecutionError("pymssql query execution failed", cause=str(e))
 
     def executemany(self, sql: str, rows: Iterable[Sequence[Any]] = None) -> None:
-        self.cursor.executemany(sql, list(rows))
+        try:
+            query_length = len(rows) if rows and hasattr(rows, '__len__') else 0
+        except Exception as e:
+            query_length = 0
+            self.logger.warning("Executing (using pymssql) {} Queries: {}".format(query_length, str(e)))
+        try:
+            self.cursor.executemany(sql, list(rows))
+        except Exception as e:
+            self.logger.error("Executemany (using pymssql) failed")
+            raise QueryExecutionError("pymssql query executemany failed", cause=str(e))
 
     def fetchall(self) -> list[tuple]:
-        return list(self.cursor.fetchall())
+        self.logger.debug("Fetching (using pymssql) All Outputs")
+        try:
+            rows = list(self.cursor.fetchall())
+            self.logger.info("Fetched (using pymssql) All Outputs Successfully")
+            return rows
+        except Exception as e:
+            self.logger.error("Fetchall (using pymssql) failed")
+            raise QueryExecutionError("pymssql fetchall query execution failed", cause=str(e))
 
     def commit(self) -> None:
-        self.conn.commit()
+        self.logger.debug("Committing (using pymssql) All Changes")
+        try:
+            self.conn.commit()
+            self.logger.info("All (using pymssql) Changes Committed Successfully")
+        except Exception as e:
+            self.logger.error("Commit (using pymssql) failed")
+            raise TransactionError("pymssql commit failed", cause=str(e))
 
     def rollback(self) -> None:
+        self.logger.debug("Rolling Back (using pymssql) All Changes")
+        try:
+            self.conn.rollback()
+            self.logger.info("All (using pymssql) Changes Rolled Back Successfully")
+        except Exception as e:
+            self.logger.error("Rolling Back (using pymssql) failed")
+            raise TransactionError("pymssql commit failed", cause=str(e))
         self.conn.rollback()
 
     def close(self) -> None:
+        self.logger.debug("Closing (using pymssql) Connection")
         try:
             if self.cursor:
                 self.cursor.close()
         finally:
-            if self.conn:
-                self.conn.close()
+            try:
+                if self.conn:
+                    self.conn.close()
+                self.logger.info("Connection (using pymssql) Closed")
+            except Exception as e:
+                self.logger.warning("Error (using pymssql) While Closing the Connection: {}".format(str(e)))
+
 
 
 if __name__ == "__main__":

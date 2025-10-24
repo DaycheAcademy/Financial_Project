@@ -24,4 +24,17 @@ class ConfigFileNotFound(BaseCryptoException):
         super().__init__(message, cause)
 
 
+class DriverNotInstalled(BaseCryptoException):
+    pass
 
+
+class DataBaseConnectionError(BaseCryptoException):
+    pass
+
+
+class QueryExecutionError(BaseCryptoException):
+    pass
+
+
+class TransactionError(BaseCryptoException):
+    pass

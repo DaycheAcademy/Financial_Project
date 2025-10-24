@@ -22,9 +22,11 @@ class ConfigManager(object):
 
     def __init__(self, path: str = 'config.cfg'):
         cfg_path = Path(path)
-        if not cfg_path.exists():
+        abs_path = Path(__file__).resolve().parent / cfg_path
+        if not abs_path.exists():
             raise ConfigFileNotFound(message=f'file {cfg_path} not found')
-        self.config = ConfigObj(cfg_path)
+        self.config = ConfigObj(str(abs_path))
+
 
 
     @property
@@ -53,15 +55,15 @@ class ConfigManager(object):
 
     @property
     def log_dir(self):
-        return self.config['log'].get('log_dir', './logs')
+        return self.config['logging'].get('log_dir', './logs')
 
     @property
     def log_name_pattern(self):
-        return self.config['log'].get('log_name_pattern', 'app_{run_id}.log')
+        return self.config['logging'].get('log_name_pattern', 'app_{run_id}.log')
 
     @property
     def log_level(self):
-        return self.config['log'].get('log_level', 'INFO')
+        return self.config['logging'].get('log_level', 'INFO')
 
 
 
